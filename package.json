@@ -1,0 +1,34 @@
+{
+  "name": "hybrid-renewable-energy-calculator",
+  "version": "1.0.0",
+  "description": "Comprehensive web application for renewable energy calculation, hybrid system planning (Solar & Wind), and cost estimation with realistic interactive animations",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "demo": "npx http-server -p 8000 -o demo.html",
+    "test": "echo 'Open demo.html in browser for testing'",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "renewable-energy",
+    "solar-calculator",
+    "wind-energy",
+    "hybrid-system",
+    "energy-visualization",
+    "roi-calculator",
+    "net-metering",
+    "off-grid",
+    "battery-storage",
+    "weather-api"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/renewable-energy-calculator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/renewable-energy-calculator/issues"
+  },
+  "homepage": "https://github.com/yourusername/renewable-energy-calculator#readme"
+}

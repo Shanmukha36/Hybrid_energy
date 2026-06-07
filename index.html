@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Renewable Energy System Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🌞 Hybrid Renewable Energy System</h1>
+            <div class="weather-info" id="weatherInfo">
+                <span id="location">Loading weather...</span>
+                <span id="conditions"></span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel: Input Forms -->
+            <aside class="input-panel">
+                <div class="panel-section">
+                    <h2>📍 Location</h2>
+                    <input type="text" id="locationInput" placeholder="City, State/Country" value="Koduru, Andhra Pradesh">
+                    <button onclick="updateLocation()">Update Location</button>
+                </div>
+
+                <div class="panel-section">
+                    <h2>⚙️ System Configuration</h2>
+                    <label><input type="checkbox" id="useSolar" checked> Use Solar System</label>
+                    <label><input type="checkbox" id="useWind" checked> Use Wind System</label>
+                </div>
+
+                <div class="panel-section solar-section">
+                    <h2>☀️ Solar System</h2>
+                    <label>Number of Solar Panels: <input type="number" id="numPanels" value="10" min="0"></label>
+                    <label>Wattage per Panel (W): <input type="number" id="panelWattage" value="400" min="0"></label>
+                    <label>Panel Efficiency (%): <input type="number" id="panelEfficiency" value="20" min="0" max="100"></label>
+                    <label>Average Sunlight Hours/Day: <input type="number" id="sunlightHours" value="5.5" min="0" max="24" step="0.5"></label>
+                </div>
+
+                <div class="panel-section wind-section">
+                    <h2>💨 Wind System</h2>
+                    <label>Number of Wind Turbines: <input type="number" id="turbineCount" value="1" min="0"></label>
+                    <label>Turbine Blade Radius (m): <input type="number" id="turbineRadius" value="2" min="0" step="0.1"></label>
+                    <label>Turbine Efficiency (%): <input type="number" id="turbineEfficiency" value="35" min="0" max="100"></label>
+                </div>
+
+                <div class="panel-section">
+                    <h2>🏠 Household Load</h2>
+                    <div id="applianceList">
+                        <div class="appliance-item">
+                            <input type="text" placeholder="Appliance" value="Refrigerator">
+                            <input type="number" placeholder="Watts" value="150" min="0">
+                            <input type="number" placeholder="Hours/day" value="24" min="0" max="24" step="0.5">
+                        </div>
+                    </div>
+                    <button onclick="addAppliance()">+ Add Appliance</button>
+                </div>
+
+                <div class="panel-section">
+                    <h2>⚙️ System Type & Pricing</h2>
+                    <label><input type="radio" name="systemType" value="on-grid" checked> On-Grid</label>
+                    <label><input type="radio" name="systemType" value="off-grid"> Off-Grid</label>
+                    <label>Utility Rate (₹/kWh): <input type="number" id="utilityRate" value="8" step="0.5" min="0"></label>
+                    <label>Export Rate (₹/kWh): <input type="number" id="exportRate" value="5" step="0.5" min="0"></label>
+                    <label class="off-grid-only">Battery Capacity (kWh): <input type="number" id="batteryCapacity" value="20" min="0"></label>
+                    <label class="off-grid-only">Autonomy Days: <input type="number" id="autonomyDays" value="2" min="1"></label>
+                </div>
+
+                <button class="calculate-btn" onclick="calculate()">🔄 Calculate System</button>
+            </aside>
+
+            <!-- Center: Visualization -->
+            <section class="visualization-area">
+                <canvas id="energyCanvas"></canvas>
+                <div class="energy-stats">
+                    <div class="stat-box">
+                        <span class="stat-label">Solar Generation</span>
+                        <span class="stat-value" id="solarGen">0 kW</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Wind Generation</span>
+                        <span class="stat-value" id="windGen">0 kW</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Total Load</span>
+                        <span class="stat-value" id="totalLoad">0 kW</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Net Power</span>
+                        <span class="stat-value" id="netPower">0 kW</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Dashboard -->
+            <aside class="dashboard-panel">
+                <h2>💰 Financial Dashboard</h2>
+                
+                <div class="dashboard-section">
+                    <h3>Daily Energy Flow</h3>
+                    <div class="metric">
+                        <span>Solar Production:</span>
+                        <span id="dailySolar">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Wind Production:</span>
+                        <span id="dailyWind">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Total Generation:</span>
+                        <span id="dailyGeneration">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Daily Consumption:</span>
+                        <span id="dailyConsumption">0 kWh</span>
+                    </div>
+                    <div class="metric highlight">
+                        <span>Net Daily:</span>
+                        <span id="netDaily">0 kWh</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <h3>Grid Interaction</h3>
+                    <div class="metric">
+                        <span>Energy Exported:</span>
+                        <span id="energyExported">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Export Earnings:</span>
+                        <span id="exportEarnings">₹0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Energy Imported:</span>
+                        <span id="energyImported">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Import Cost:</span>
+                        <span id="importCost">₹0</span>
+                    </div>
+                    <div class="metric highlight">
+                        <span>Net Monthly Savings:</span>
+                        <span id="monthlySavings">₹0</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <h3>System Costs & ROI</h3>
+                    <div class="metric">
+                        <span>Solar System Cost:</span>
+                        <span id="solarCost">₹0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Wind System Cost:</span>
+                        <span id="windCost">₹0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Battery Cost:</span>
+                        <span id="batteryCost">₹0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Installation (20%):</span>
+                        <span id="installCost">₹0</span>
+                    </div>
+                    <div class="metric highlight">
+                        <span>Total Investment:</span>
+                        <span id="totalCost">$0</span>
+                    </div>
+                    <div class="metric highlight">
+                        <span>Payback Period:</span>
+                        <span id="paybackPeriod">0 years</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-section off-grid-only">
+                    <h3>Battery Storage</h3>
+                    <div class="metric">
+                        <span>Required Capacity:</span>
+                        <span id="requiredBattery">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Current Capacity:</span>
+                        <span id="currentBattery">0 kWh</span>
+                    </div>
+                    <div class="metric">
+                        <span>Battery Status:</span>
+                        <span id="batteryStatus">Adequate</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="calculator.js"></script>
+    <script src="visualization.js"></script>
+    <!-- Load config BEFORE app.js -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

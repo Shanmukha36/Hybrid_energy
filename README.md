@@ -293,7 +293,7 @@ Hybrid-Renewable-Energy-System/
 ## Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/hybrid-renewable-energy-system.git
+git clone https://github.com/Shanmukha36/hybrid-renewable-energy-system.git
 
 cd hybrid-renewable-energy-system
 ```

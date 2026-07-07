@@ -240,7 +240,7 @@ Weather data influences:
 * Environmental animations
 * UI lighting effects
 
-### Real-Time Parameters
+### Real-Time Parameter's
 
 * Temperature
 * Humidity
